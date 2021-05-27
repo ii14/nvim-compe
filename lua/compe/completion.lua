@@ -100,6 +100,13 @@ Completion.select = function(args)
   end
 end
 
+Completion._complete_done = function()
+  local user_data = vim.v.completed_item.user_data
+  if user_data ~= nil then
+    Completion.confirm({ index = user_data._compe_index - 1 })
+  end
+end
+
 --- confirm
 Completion.confirm = function(args)
   local offset = Completion._current_offset
@@ -252,6 +259,14 @@ end)
 Completion._show = Async.guard('Completion._show', guard(function(start_offset, items)
   Completion._current_offset = start_offset
   Completion._current_items = items
+
+  for i, item in ipairs(items) do
+    if not item.user_data then
+      item.user_data = { _compe_index = i }
+    else
+      item.user_data._compe_index = i
+    end
+  end
 
   local should_preselect = false
   if items[1] then

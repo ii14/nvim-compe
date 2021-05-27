@@ -10,6 +10,7 @@ augroup compe
   autocmd InsertLeave * call s:on_insert_leave()
   autocmd TextChangedI,TextChangedP * call s:on_text_changed()
   autocmd User CompeConfirmDone silent
+  autocmd CompleteDone * lua require'compe.completion'._complete_done()
 augroup END
 
 "
